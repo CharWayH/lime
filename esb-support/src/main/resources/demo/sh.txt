@@ -1,0 +1,1 @@
+runmqsc QMGR.{qmgrNum} </home/esb/sh/mqsc/{qmgrNum}.QMGR> "/home/esb/sh/mqsc/{qmgrNum}.txt"

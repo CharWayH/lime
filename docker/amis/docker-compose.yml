@@ -1,0 +1,191 @@
+version: '3'
+services:
+  web:
+    image: registry.baidubce.com/aisuda/aisuda:1.9.0
+    ports:
+      - '8090:8085'
+    environment:
+      # 数据库用户名
+      ISUDA_DB_USER: root
+      # 数据库密码，这个密码需要和下面 mysql 镜像里的一致
+      ISUDA_DB_PASSWORD: 'Q39sTi0i^9'
+      ISUDA_DB_NAME: aisuda
+      ISUDA_DB_HOST: db
+      ISUDA_DB_PORT: 3306
+      # 如果数据库时区是 utc 需要开启下面这个
+      # ISUDA_DB_TIMEZONE: utc
+
+      # id 加密密钥，建议修改
+      ISUDA_HASHID_SALT: 'aisuda'
+
+      # 数据库加密密钥，建议修改 PS:长度必须为64位
+      ISUDA_ENCRYPT_KEY: 'B224AD82C6206D4DD0D49B3A17BD894D8EA2DC671372BA6B270D3B3AD599A45C'
+
+      # redis 地址和端口
+      ISUDA_REDIS_HOST: redis
+      ISUDA_REDIS_PORT: 6379
+      # ISUDA_REDIS_PASSWORD redis 密码，
+      # ISUDA_REDIS_ENABLE_READY_CHECK 是否开启 ready check 默认不开
+      # 是否使用 redis cluster
+      # ISUDA_REDIS_CLUSTER: 1
+      # 是否使用 redis sentinel
+      # ISUDA_REDIS_SENTINEL: 1
+      # 如果开启 redis cluster 或 sentinel，ISUDA_REDIS_HOST 可以填入多个地址及端口，逗号分割
+      # ISUDA_REDIS_HOST: 'host1:6379,host2:6379'
+
+      # 邮件 smtp 地址，用于发验证码
+      ISUDA_EMAIL_HOST:
+      # 邮件 smtp 端口，比如 25
+      ISUDA_EMAIL_PORT:
+      # 邮件用户名和密码
+      ISUDA_EMAIL_USER:
+      ISUDA_EMAIL_PASS:
+      # 如果是 465 之类的 ssl 端口，请取消下面的注释
+      # ISUDA_EMAIL_SECURE: 1
+      # 邮件显示的发件人地址
+      ISUDA_EMAIL_FROM: 'xxx@xxx.com'
+      # 如果服务器是 SSLv3，需要注释掉下面这个
+      # ISUDA_EMAIL_SSLV3: 1
+
+      # 邮件 API，如果配置就优先使用，用于没有 smtp 的场景，细节请参考这篇文档后面的介绍
+      # ISUDA_EMAIL_API: http://xxx.com/emailapi
+      # 邮件 API 的签名密钥
+      # ISUDA_EMAIL_API_PASSWORD:
+
+      # license（可选，如果不填则需要在安装时提供）
+      ISUDA_LICENSE:
+
+      # 百度统计（可选）
+      BAIDU_TONGJI_CODE:
+
+      # Google Analytics（可选）
+      GA_MEASUREMENT_ID:
+
+      # 文件存储配置（可选）
+      # DRIVER 支持 bos 或 s3
+      ISUDA_FILE_STORAGE_DRIVER:
+      ISUDA_FILE_STORAGE_REGION:
+      ISUDA_FILE_STORAGE_BUCKET:
+      ISUDA_FILE_STORAGE_AK:
+      ISUDA_FILE_STORAGE_SK:
+      # s3 专有，使用路径而不是域名来访问 bucket
+      # ISUDA_FILE_STORAGE_S3FORCEPATHSTYLE:
+
+      # ES 操作日志 和 api 转发日志相关
+      # es 服务地址
+      ISUDA_ES_URL:
+      # es 服务帐号密码
+      ISUDA_ES_USERNAME:
+      ISUDA_ES_PASSWORD:
+
+      # 索引文件名（可选）
+      # ISUDA_SITE_LOG_INDEX: suda-log-{{date:YYYY-MM}}
+
+      # 是否开启站点日志记录
+      ISUDA_SITE_LOG_ENABLED:
+
+      # 默认 api 转发日志不存储 发送体内容，如果开启了，将会存储 json 和 普通表单数据 内容体
+      ISUDA_SITE_LOG_SAVE_REQUSET_PAYLOAD:
+
+      # 平台级别超级管理员邮箱（如果设置为 password 这就是必填的）
+      ISUDA_PLATFORM_ADMINISTRATORS: aa@aa.com,bb@bb.com
+
+      # 登录相关
+      # 默认的登录方式，加入配置成 oauth 表示只启用 oauth 登录方式，多个登录方式请用逗号隔开如：password,email,weixin,oauth,ldap
+      AUTH_ENABLED_LIST: password,email
+
+      # 普通用户默认登录密码，在开启 password 登录方式的时候有用
+      ISUDA_LOGIN_DEFAULT_PASSWORD: aisuda2021
+
+      # 管理员默认密码，在开启 password 登录方式的时候有用
+      ISUDA_PLATFORM_ADMINISTRATOR_DEFAULT_PASSWORD: admin2021
+
+      # oauth 登录相关
+
+      # oauth 授权接口地址
+      ISUDA_OAUTH_AUTHORIZE_URL:
+
+      # oauth token 获取接口地址
+      ISUDA_OAUTH_TOKEN_URL:
+
+      # oauth clientId
+      ISUDA_OAUTH_CLIENT_ID:
+
+      # oauth clientSecret
+      ISUDA_OAUTH_CLIENT_SECRET:
+
+      # oauth scope 默认为 email
+      ISUDA_OAUTH_SCOPE:
+
+      # oauth 获取 用户 profile 的接口地址
+      ISUDA_OAUTH_INFO_URL:
+
+      # 默认为 id, 假如你的 oauth 返回的 profile 中，id 为 user_id 请填写 user_id
+      ISUDA_OAUTH_ID_FIELD:
+
+      # 默认为 name, 假如你的 oauth 返回的 profile 中，用户名为 user_name 请填写 user_name
+      ISUDA_OAUTH_NAME_FIELD:
+
+      # 邮箱地址字段，如果你的 oauth 中返回了邮箱地址，请配置，如果没有可以不配置
+      ISUDA_OAUTH_EMAIL_FIELD:
+
+      # 邮箱后缀，当你的 oauth 没有返回邮箱地址，同时又不想有绑定邮箱这个动作，可以配置这个比如：baidu.com，这样会自动根据用户名拼接个假邮箱地址。
+      ISUDA_OAUTH_EMAIL_SUFFIX:
+
+      # 默认退出是 爱速搭的退出页，如果配置了，会跳转到对应 oauth 的退出页面。
+      ISUDA_OAUTH_LOGOUT_URL:
+
+      # ldap 相关，请看后面的说明
+      ISUDA_LDAP_URL:
+      ISUDA_LDAP_BIND_DN:
+      ISUDA_LDAP_BIND_CREDENTIALS:
+      ISUDA_LDAP_SEARCH_BASE:
+      ISUDA_LDAP_SEARCH_FILTER:
+      ISUDA_LDAP_EMAIL_ATTRIBUTE:
+      ISUDA_LDAP_NAME_ATTRIBUTE:
+      ISUDA_LDAP_NICKNAME_ATTRIBUTE:
+
+      # 默认不开启，开启后，应用导出将剔除敏感信息，但是意味着导入的时候你还需要额外去补填这些信息
+      ISUDA_DISABLE_EXPORT_SENSITIVE_INFO:
+
+      # 默认不开启，开启后，应用发布的时候，用开发环境权限覆盖运行态资源权限
+      ISUDA_OVERWRITE_RUNTIME_ACL:
+
+      # 默认不开启，开启后，发布环境的权限通过接口配置的接口返回的权限点进行控制
+      ISUDA_TAKEOVER_RUNTIME_ACL:
+
+      # 是否是 https，爱速搭的访问地址是 https 需要增加这个配置项
+      # ISUDA_IS_HTTPS: true
+
+      # 下面是自定义组件所需的 npm 本地镜像
+      # NPM_REGISTRY: https://registry.npm.taobao.org
+      # NPM_SEARCH: https://www.npmjs.com/search/suggestions
+
+  db:
+    image: registry.baidubce.com/aisuda/mysql:8
+    command:
+      [
+        'mysqld',
+        '--character-set-server=utf8mb4',
+        '--collation-server=utf8mb4_unicode_ci',
+        '--skip-character-set-client-handshake',
+        '--default-authentication-plugin=mysql_native_password',
+        '--max-allowed-packet=1073741824',
+        '--sort-buffer-size=512K',
+        '--max-connections=4096'
+      ]
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+    environment:
+      #MYSQL_ROOT_PASSWORD: 'Q39sTi0i^9'
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      MYSQL_ROOT_HOST: '%'
+      TZ: 'Asia/Shanghai'
+    security_opt:
+      - seccomp:unconfined
+
+  redis:
+    image: registry.baidubce.com/aisuda/redis:5
+    command: ['redis-server', '--appendonly', 'yes']
+    volumes:
+      - ./redis-data:/data

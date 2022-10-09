@@ -1,0 +1,31 @@
+* QMGR.S{sysCode}_{fNum}系统---------------------------------------------
+*创建监听
+DEFINE LISTENER(LISTENER.TCP) TRPTYPE(TCP) PORT(50{sysCode}) CONTROL(QMGR) replace
+*启动监听
+START LISTENER(LISTENER.TCP)
+*创建集群接收方通道
+DEFINE CHANNEL(TO.S{sysCode}) CHLTYPE(CLUSRCVR) TRPTYPE(TCP) CONNAME('{fport}(50{sysCode})') CLUSTER(QMGR_CLUSTER1) maxmsgl(99999999) replace
+*创建集群发送方通道
+DEFINE CHANNEL(TO.CLUSTER1) CHLTYPE(CLUSSDR) TRPTYPE(TCP) CONNAME('{c1port}(6001)') CLUSTER(QMGR_CLUSTER1) maxmsgl(99999999) replace
+DEFINE CHANNEL(TO.CLUSTER2) CHLTYPE(CLUSSDR) TRPTYPE(TCP) CONNAME('{c2port}(6002)') CLUSTER(QMGR_CLUSTER1) maxmsgl(99999999) replace
+*修改集群传输队列最大消息长度
+alter qlocal(SYSTEM.CLUSTER.TRANSMIT.QUEUE) MAXMSGL(99999999)
+*创建服务器连接通道
+define channel('C.S{sysCode}.C')  chltype (SVRCONN) maxmsgl(99999999) mcauser('mqm') replace
+start channel('C.S{sysCode}.C')
+*创建监控队列
+define qlocal('EQ.MONITOR')  defpsist(YES) maxdepth(99999999) maxmsgl(99999999) usage(NORMAL) replace
+*创建死信队列
+define qlocal('EQ.S{sysCode}.DEADQ') defpsist(YES) maxdepth(99999999) maxmsgl(99999999) replace
+*更改队列管理器属性，设置其死信队列
+alter qmgr deadq('EQ.S{sysCode}.DEADQ') maxmsgl(99999999)
+*修改队列管理器认证通道为已禁用
+alter QMGR CHLAUTH(DISABLED)
+*修改队列管理器认证连接认证为已NONE
+alter QMGR CONNAUTH('')
+*修改队列管理器认证信息IDPWS本地连接，客户连接都为NONE
+alter  AUTHINFO(SYSTEM.DEFAULT.AUTHINFO.IDPWOS) AUTHTYPE(IDPWOS) CHCKLOCL(NONE) CHCKCLNT(NONE)
+*修改队列管理器最大长度 
+alter QMGR MAXMSGL(99999999)
+
+

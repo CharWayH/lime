@@ -1,0 +1,27 @@
+version: '2'
+
+services:
+  lime-mysql-db:
+    image: mysql:5.7
+    container_name: lime-mysql-db
+    environment:
+      TZ: Asia/Shanghai
+      #MYSQL_USER: root
+      #MYSQL_PASSWORD: 123456
+      #MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      MYSQL_ROOT_HOST: '%'
+    depends_on:
+      - lime-dbdata
+    ports:
+      - "23306:3306"
+    volumes:
+      - ./sql:/docker-entrypoint-initdb.d
+    volumes_from:
+      - lime-dbdata
+
+  lime-dbdata:
+    image: alpine:latest
+    container_name: lime-dbdata
+    volumes:
+      - /var/lib/mysql
