@@ -1,9 +1,9 @@
 package com.charwayh.lime.service.api.impl.domain;
 
+import com.charwayh.lime.common.domain.TaskInfo;
 import com.charwayh.lime.service.api.domain.MessageParam;
 import com.charwayh.lime.support.domain.MessageTemplate;
 import com.charwayh.lime.support.pipeline.ProcessModel;
-import com.charwayh.lime.common.constant.domain.TaskInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

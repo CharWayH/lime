@@ -104,8 +104,10 @@ public class MessageTemplateController {
     @PostMapping("/save")
     @ApiOperation("/保存数据")
     public BasicResultVO saveOrUpdate(@RequestBody MessageTemplate messageTemplate) {
-        MessageTemplate info = messageTemplateService.saveOrUpdate(messageTemplate);
-        return BasicResultVO.success(info);
+        if(messageTemplateService.saveOrUpdate(messageTemplate)){
+            return  BasicResultVO.success("新增模板成功");
+        }
+        return BasicResultVO.fail("新增模板失败");
     }
 
     /**
@@ -116,6 +118,25 @@ public class MessageTemplateController {
     public BasicResultVO copyById(@PathVariable("id") Long id) {
         messageTemplateService.copy(id);
         return BasicResultVO.success();
+    }
+
+
+    /**
+     * 启动模板的定时任务
+     */
+    @PostMapping("start/{id}")
+    @ApiOperation("/启动模板的定时任务")
+    public BasicResultVO start(@RequestBody @PathVariable("id") Long id) {
+        return messageTemplateService.startCronTask(id);
+    }
+
+    /**
+     * 暂停模板的定时任务
+     */
+    @PostMapping("stop/{id}")
+    @ApiOperation("/暂停模板的定时任务")
+    public BasicResultVO stop(@RequestBody @PathVariable("id") Long id) {
+        return messageTemplateService.stopCronTask(id);
     }
 
     /**
@@ -158,12 +179,5 @@ public class MessageTemplateController {
             return BasicResultVO.fail(RespStatusEnum.SERVICE_ERROR);
         }
         return BasicResultVO.success(MapUtil.of(new String[][]{{"value", filePath}}));
-    }
-
-
-    @PostMapping("test")
-    public String test(@RequestBody MessageTemplate param){
-        messageTemplateService.test(param);
-        return "成功";
     }
 }

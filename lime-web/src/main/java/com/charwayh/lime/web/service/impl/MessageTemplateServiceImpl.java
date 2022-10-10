@@ -4,9 +4,9 @@ package com.charwayh.lime.web.service.impl;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.charwayh.lime.common.constant.LimeConstant;
 import com.charwayh.lime.common.enums.AuditStatus;
@@ -25,7 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -44,57 +43,54 @@ public class MessageTemplateServiceImpl implements MessageTemplateService {
     private XxlJobUtils xxlJobUtils;
 
 
-    @Override
-    public void test(MessageTemplate template) {
-        messageTemplateMapper.insert(template);
-    }
 
     @Override
     public List<MessageTemplate> queryList(MessageTemplateParam param) {
         // 当前页码，每页有几条
-        Page<MessageTemplate> page = new Page<>(param.getPage(), param.getPerPage());
+        Page<MessageTemplate> page = new Page(param.getPage(), param.getPerPage());
         messageTemplateMapper.selectPage(page,new QueryWrapper<MessageTemplate>().isNotNull("id"));
         ArrayList<MessageTemplate> list = new ArrayList<>();
 
         list.addAll(page.getRecords());
-//        Iterator<MessageTemplate> iterator = page.getRecords().iterator();
-//        while (iterator.hasNext()) {
-//            MessageTemplate next =  iterator.next();
-//            list.add(next);
-//        }
         return list;
     }
 
-
     @Override
-    public Long count() {
+    public long count() {
         return messageTemplateMapper.selectCount(null);
     }
 
+
+
+
+
     @Override
-    public MessageTemplate saveOrUpdate(MessageTemplate messageTemplate) {
+    public boolean saveOrUpdate(MessageTemplate messageTemplate) {
+        // 记录更新时间
+        messageTemplate.setUpdated(Math.toIntExact(DateUtil.currentSeconds()));
+        int result;
+        // 无id则初始化状态(新增)，有id则更新
         if (messageTemplate.getId() == null) {
             initStatus(messageTemplate);
+            result = messageTemplateMapper.insert(messageTemplate);
         } else {
             resetStatus(messageTemplate);
+            result = messageTemplateMapper.updateById(messageTemplate);
         }
-
-        messageTemplate.setUpdated(Math.toIntExact(DateUtil.currentSeconds()));
-
-        //return messageTemplateDao.save(messageTemplate);
-        return null;
+        if (result == 1) {
+            return true;
+        } else {
+            return false;
+        }
     }
-
 
 
 
     @Override
     public void deleteByIds(List<Long> ids) {
-        // 获取选取的所有模板信息
-        List<MessageTemplate> messageTemplates = messageTemplateMapper.selectBatchIds(ids);
-        for (MessageTemplate messageTemplate : messageTemplates) {
-//            wrapper.set("is_deleted", LimeConstant.TRUE).eq("id", messageTemplate.getId());
-//            messageTemplateMapper.update(messageTemplate, wrapper);
+        // 遍历所有要删除的messageTemplate
+        for (Long id : ids) {
+            MessageTemplate messageTemplate = messageTemplateMapper.selectById(id);
             messageTemplateMapper.deleteById(messageTemplate.getId());
 
             // 将有定时任务的消息模板的任务删除
@@ -136,7 +132,7 @@ public class MessageTemplateServiceImpl implements MessageTemplateService {
             cronTaskService.startCronTask(taskId);
             MessageTemplate clone = ObjectUtil.clone(messageTemplate).setMsgStatus(MessageStatus.RUN.getCode()).setCronTaskId(taskId).
                     setUpdated(Math.toIntExact(DateUtil.currentSeconds()));
-            messageTemplateMapper.insert(clone);
+            saveOrUpdate(clone);
             return BasicResultVO.success();
         }
         return BasicResultVO.fail();
@@ -148,7 +144,8 @@ public class MessageTemplateServiceImpl implements MessageTemplateService {
         MessageTemplate messageTemplate = messageTemplateMapper.selectById(id);
         MessageTemplate clone = ObjectUtil.clone(messageTemplate).setMsgStatus(MessageStatus.STOP.getCode()).
                 setUpdated(Math.toIntExact(DateUtil.currentSeconds()));
-        messageTemplateMapper.insert(clone);
+        Wrapper<MessageTemplate> updateWrapper = new UpdateWrapper<>();
+        messageTemplateMapper.update(clone,((UpdateWrapper<MessageTemplate>) updateWrapper).set("id", id));
         // 2.暂停定时任务
         return cronTaskService.stopCronTask(clone.getCronTaskId());
     }
@@ -186,6 +183,5 @@ public class MessageTemplateServiceImpl implements MessageTemplateService {
             cronTaskService.stopCronTask(messageTemplate.getCronTaskId());
         }
     }
-
 
 }

@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * xxl 任务信息 配置
+ * xxl 任务信息配置
  *
  * @author charwayH
  */

@@ -1,4 +1,4 @@
-package com.charwayh.lime.common.constant.domain;
+package com.charwayh.lime.common.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,5 +1,6 @@
 package com.charwayh.lime.web.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.charwayh.lime.common.vo.BasicResultVO;
 import com.charwayh.lime.support.domain.MessageTemplate;
 import com.charwayh.lime.web.vo.MessageTemplateParam;
@@ -12,7 +13,7 @@ import java.util.List;
  * @author charwayH
  *
  */
-public interface MessageTemplateService {
+public interface MessageTemplateService  {
 
     /**
      * 查询未删除的模板列表（分页)
@@ -28,7 +29,7 @@ public interface MessageTemplateService {
      *
      * @return
      */
-    Long count();
+    long count();
 
     /**
      * 单个 保存或者更新
@@ -38,7 +39,7 @@ public interface MessageTemplateService {
      * @param messageTemplate
      * @return
      */
-    MessageTemplate saveOrUpdate(MessageTemplate messageTemplate);
+    boolean saveOrUpdate(MessageTemplate messageTemplate);
 
 
     /**
@@ -76,6 +77,5 @@ public interface MessageTemplateService {
      */
     BasicResultVO stopCronTask(Long id);
 
-    void test(MessageTemplate param);
 
 }

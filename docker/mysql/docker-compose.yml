@@ -11,17 +11,17 @@ services:
       #MYSQL_ROOT_PASSWORD: 123456
       MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
       MYSQL_ROOT_HOST: '%'
-    depends_on:
-      - lime-dbdata
+#    depends_on:
+#      - lime-dbdata
     ports:
       - "23306:3306"
-    volumes:
-      - ./sql:/docker-entrypoint-initdb.d
-    volumes_from:
-      - lime-dbdata
+#    volumes:
+#      - ./sql:/docker-entrypoint-initdb.d
+#    volumes_from:
+#      - lime-dbdata
 
-  lime-dbdata:
-    image: alpine:latest
-    container_name: lime-dbdata
-    volumes:
-      - /var/lib/mysql
+#  lime-dbdata:
+#    image: alpine:latest
+#    container_name: lime-dbdata
+#    volumes:
+#      - /var/lib/mysql

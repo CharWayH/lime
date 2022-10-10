@@ -35,7 +35,7 @@ public class XxlJobUtils {
     private CronTaskService cronTaskService;
 
     /**
-     * 构建xxlJobInfo信息
+     * 传入messageTemplate构建xxlJobInfo信息
      *
      * @param messageTemplate
      * @return
@@ -43,7 +43,7 @@ public class XxlJobUtils {
     public XxlJobInfo buildXxlJobInfo(MessageTemplate messageTemplate) {
 
         String scheduleConf = messageTemplate.getExpectPushTime();
-        // 如果没有指定cron表达式，说明立即执行(给到xxl-job延迟5秒的cron表达式)
+        // 如果没有指定cron表达式，说明立即执行(给到xxl-job延迟10秒的cron表达式)
         if (messageTemplate.getExpectPushTime().equals(String.valueOf(LimeConstant.FALSE))) {
             scheduleConf = DateUtil.format(DateUtil.offsetSecond(new Date(), XxlJobConstant.DELAY_TIME), LimeConstant.CRON_FORMAT);
         }

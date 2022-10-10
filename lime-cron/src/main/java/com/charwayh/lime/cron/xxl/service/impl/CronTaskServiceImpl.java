@@ -94,22 +94,89 @@ public class CronTaskServiceImpl implements CronTaskService {
 
     @Override
     public BasicResultVO startCronTask(Integer taskId) {
-        return null;
+        String path = xxlAddresses + XxlJobConstant.RUN_URL;
+
+        HashMap<String, Object> params = MapUtil.newHashMap();
+        params.put("id", taskId);
+
+        HttpResponse response;
+        ReturnT returnT = null;
+        try {
+            response = HttpRequest.post(path).form(params).cookie(getCookie()).execute();
+            returnT = JSON.parseObject(response.body(), ReturnT.class);
+            if (response.isOk() && ReturnT.SUCCESS_CODE == returnT.getCode()) {
+                return BasicResultVO.success();
+            }
+        } catch (Exception e) {
+            log.error("CronTaskService#startCronTask fail,e:{},param:{},response:{}", Throwables.getStackTraceAsString(e)
+                    , JSON.toJSONString(params), JSON.toJSONString(returnT));
+        }
+        return BasicResultVO.fail(RespStatusEnum.SERVICE_ERROR, JSON.toJSONString(returnT));
     }
 
     @Override
     public BasicResultVO stopCronTask(Integer taskId) {
-        return null;
+        String path = xxlAddresses + XxlJobConstant.STOP_URL;
+
+        HashMap<String, Object> params = MapUtil.newHashMap();
+        params.put("id", taskId);
+
+        HttpResponse response;
+        ReturnT returnT = null;
+        try {
+            response = HttpRequest.post(path).form(params).cookie(getCookie()).execute();
+            returnT = JSON.parseObject(response.body(), ReturnT.class);
+            if (response.isOk() && ReturnT.SUCCESS_CODE == returnT.getCode()) {
+                return BasicResultVO.success();
+            }
+        } catch (Exception e) {
+            log.error("CronTaskService#stopCronTask fail,e:{},param:{},response:{}", Throwables.getStackTraceAsString(e)
+                    , JSON.toJSONString(params), JSON.toJSONString(returnT));
+        }
+        return BasicResultVO.fail(RespStatusEnum.SERVICE_ERROR, JSON.toJSONString(returnT));
     }
 
     @Override
     public BasicResultVO getGroupId(String appName, String title) {
-        return null;
+        String path = xxlAddresses + XxlJobConstant.JOB_GROUP_PAGE_LIST;
+
+        HashMap<String, Object> params = MapUtil.newHashMap();
+        params.put("appname", appName);
+        params.put("title", title);
+
+        HttpResponse response = null;
+        try {
+            response = HttpRequest.post(path).form(params).cookie(getCookie()).execute();
+            Integer id = JSON.parseObject(response.body()).getJSONArray("data").getJSONObject(0).getInteger("id");
+            if (response.isOk() && id != null) {
+                return BasicResultVO.success(id);
+            }
+        } catch (Exception e) {
+            log.error("CronTaskService#getGroupId fail,e:{},param:{},response:{}", Throwables.getStackTraceAsString(e)
+                    , JSON.toJSONString(params), JSON.toJSONString(response.body()));
+        }
+        return BasicResultVO.fail(RespStatusEnum.SERVICE_ERROR, JSON.toJSONString(response.body()));
     }
 
     @Override
     public BasicResultVO createGroup(XxlJobGroup xxlJobGroup) {
-        return null;
+        Map<String, Object> params = JSON.parseObject(JSON.toJSONString(xxlJobGroup), Map.class);
+        String path = xxlAddresses + XxlJobConstant.JOB_GROUP_INSERT_URL;
+
+        HttpResponse response;
+        ReturnT returnT = null;
+
+        try {
+            response = HttpRequest.post(path).form(params).cookie(getCookie()).execute();
+            returnT = JSON.parseObject(response.body(), ReturnT.class);
+            if (response.isOk() && ReturnT.SUCCESS_CODE == returnT.getCode()) {
+                return BasicResultVO.success();
+            }
+        } catch (Exception e) {
+            log.error("CronTaskService#createGroup fail,e:{},param:{},response:{}", Throwables.getStackTraceAsString(e)
+                    , JSON.toJSONString(params), JSON.toJSONString(returnT));
+        }
+        return BasicResultVO.fail(RespStatusEnum.SERVICE_ERROR, JSON.toJSONString(returnT));
     }
 
 

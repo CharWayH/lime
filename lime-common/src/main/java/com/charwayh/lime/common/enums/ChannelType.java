@@ -1,6 +1,6 @@
 package com.charwayh.lime.common.enums;
 
-import com.charwayh.lime.common.dto.model.EmailContentModel;
+import com.charwayh.lime.common.dto.model.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
@@ -14,18 +14,17 @@ import lombok.ToString;
 public enum ChannelType {
 
 
-    //IM(10, "IM(站内信)", ImContentModel.class, "im"),
-    //PUSH(20, "push(通知栏)", PushContentModel.class, "push"),
-    //SMS(30, "sms(短信)", SmsContentModel.class, "sms"),
+    IM(10, "IM(站内信)", ImContentModel.class, "im"),
+    PUSH(20, "push(通知栏)", PushContentModel.class, "push"),
+    SMS(30, "sms(短信)", SmsContentModel.class, "sms"),
     EMAIL(40, "email(邮件)", EmailContentModel.class, "email"),
-//    OFFICIAL_ACCOUNT(50, "officialAccounts(服务号)", OfficialAccountsContentModel.class, "official_accounts"),
-//    MINI_PROGRAM(60, "miniProgram(小程序)", MiniProgramContentModel.class, "mini_program"),
-//    ENTERPRISE_WE_CHAT(70, "enterpriseWeChat(企业微信)", EnterpriseWeChatContentModel.class, "enterprise_we_chat"),
-//    DING_DING_ROBOT(80, "dingDingRobot(钉钉机器人)", DingDingRobotContentModel.class, "ding_ding_robot"),
-//    DING_DING_WORK_NOTICE(90, "dingDingWorkNotice(钉钉工作通知)", DingDingWorkContentModel.class, "ding_ding_work_notice"),
-//    ENTERPRISE_WE_CHAT_ROBOT(100, "enterpriseWeChat(企业微信机器人)", EnterpriseWeChatRobotContentModel.class, "enterprise_we_chat_robot"),
-//    FEI_SHU_ROBOT(110, "feiShuRoot(飞书机器人)", FeiShuRobotContentModel.class, "fei_shu_robot"),
-    ;
+    OFFICIAL_ACCOUNT(50, "officialAccounts(服务号)", OfficialAccountsContentModel.class, "official_accounts"),
+    MINI_PROGRAM(60, "miniProgram(小程序)", MiniProgramContentModel.class, "mini_program"),
+    ENTERPRISE_WE_CHAT(70, "enterpriseWeChat(企业微信)", EnterpriseWeChatContentModel.class, "enterprise_we_chat"),
+    DING_DING_ROBOT(80, "dingDingRobot(钉钉机器人)", DingDingRobotContentModel.class, "ding_ding_robot"),
+    DING_DING_WORK_NOTICE(90, "dingDingWorkNotice(钉钉工作通知)", DingDingWorkContentModel.class, "ding_ding_work_notice"),
+    ENTERPRISE_WE_CHAT_ROBOT(100, "enterpriseWeChat(企业微信机器人)", EnterpriseWeChatRobotContentModel.class, "enterprise_we_chat_robot"),
+    FEI_SHU_ROBOT(110, "feiShuRoot(飞书机器人)", FeiShuRobotContentModel.class, "fei_shu_robot"),;
 
     /**
      * 编码值
@@ -49,6 +48,7 @@ public enum ChannelType {
 
     /**
      * 通过code获取class
+     *
      * @param code
      * @return
      */
@@ -63,6 +63,7 @@ public enum ChannelType {
 
     /**
      * 通过code获取enum
+     *
      * @param code
      * @return
      */

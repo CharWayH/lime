@@ -2,6 +2,7 @@ package com.charwayh.lime.support.mapper;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.charwayh.lime.support.domain.MessageTemplate;
 import org.springframework.stereotype.Repository;
 
