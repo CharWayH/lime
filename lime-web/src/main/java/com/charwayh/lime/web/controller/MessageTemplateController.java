@@ -50,12 +50,6 @@ public class MessageTemplateController {
     @Value("${lime.business.upload.crowd.path}")
     private String dataPath;
 
-
-    @RequestMapping("/test")
-    public List<MessageTemplate> test(@RequestBody MessageTemplateParam param){
-        return messageTemplateService.queryList(param);
-    }
-
     /**
      * 消息模板列表数据
      */

@@ -74,7 +74,7 @@ public class MessageTemplateServiceImpl implements MessageTemplateService {
             initStatus(messageTemplate);
             result = messageTemplateMapper.insert(messageTemplate);
         } else {
-            resetStatus(messageTemplate);
+            //resetStatus(messageTemplate);
             result = messageTemplateMapper.updateById(messageTemplate);
         }
         if (result == 1) {
@@ -144,8 +144,7 @@ public class MessageTemplateServiceImpl implements MessageTemplateService {
         MessageTemplate messageTemplate = messageTemplateMapper.selectById(id);
         MessageTemplate clone = ObjectUtil.clone(messageTemplate).setMsgStatus(MessageStatus.STOP.getCode()).
                 setUpdated(Math.toIntExact(DateUtil.currentSeconds()));
-        Wrapper<MessageTemplate> updateWrapper = new UpdateWrapper<>();
-        messageTemplateMapper.update(clone,((UpdateWrapper<MessageTemplate>) updateWrapper).set("id", id));
+        saveOrUpdate(clone);
         // 2.暂停定时任务
         return cronTaskService.stopCronTask(clone.getCronTaskId());
     }
@@ -163,7 +162,6 @@ public class MessageTemplateServiceImpl implements MessageTemplateService {
                 .setCreator("charwayH").setUpdator("charwayH").setTeam("charwayH").setAuditor("charwayH")
                 .setCreated(Math.toIntExact(DateUtil.currentSeconds()))
                 .setIsDeleted(LimeConstant.FALSE);
-
     }
 
 

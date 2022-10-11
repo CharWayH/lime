@@ -134,6 +134,8 @@ docker-compose up
 
 http://localhost:8001/xxl-job-admin/
 
+用户名:admin
+密码:123456
 
 
 

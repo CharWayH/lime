@@ -28,7 +28,7 @@ import java.util.Optional;
 @Slf4j
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-@ConditionalOnProperty(name = "austin.mq.pipeline", havingValue = MessageQueuePipeline.KAFKA)
+@ConditionalOnProperty(name = "lime.mq.pipeline", havingValue = MessageQueuePipeline.KAFKA)
 public class Receiver {
     @Autowired
     private ConsumeService consumeService;
@@ -38,7 +38,7 @@ public class Receiver {
      * @param consumerRecord
      * @param topicGroupId
      */
-    @KafkaListener(topics = "#{'${austin.business.topic.name}'}", containerFactory = "filterContainerFactory")
+    @KafkaListener(topics = "#{'${lime.business.topic.name}'}", containerFactory = "filterContainerFactory")
     public void consumer(ConsumerRecord<?, String> consumerRecord, @Header(KafkaHeaders.GROUP_ID) String topicGroupId) {
         Optional<String> kafkaMessage = Optional.ofNullable(consumerRecord.value());
         if (kafkaMessage.isPresent()) {
@@ -58,7 +58,7 @@ public class Receiver {
      * 撤回消息
      * @param consumerRecord
      */
-    @KafkaListener(topics = "#{'${austin.business.recall.topic.name}'}",groupId = "#{'${austin.business.recall.group.name}'}",containerFactory = "filterContainerFactory")
+    @KafkaListener(topics = "#{'${lime.business.recall.topic.name}'}",groupId = "#{'${lime.business.recall.group.name}'}",containerFactory = "filterContainerFactory")
     public void recall(ConsumerRecord<?,String> consumerRecord){
         Optional<String> kafkaMessage = Optional.ofNullable(consumerRecord.value());
         if(kafkaMessage.isPresent()){
